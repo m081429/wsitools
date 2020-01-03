@@ -8,6 +8,8 @@ import sys
 from wsitools.tissue_detection.tissue_detector import TissueDetector
 from wsitools.patch_extraction.patch_extractor import ExtractorParameters, PatchExtractor
 from wsitools.patch_extraction.feature_map_creator import FeatureMapCreator
+from wsitools.wsi_annotation.region_annotation import AnnotationRegions
+
 import multiprocessing
 
 def main():
@@ -65,6 +67,11 @@ def main():
                         default=None,
                         help="XML definig the annotations")
 
+    parser.add_argument("-y", "--annotation-class_label_id_csv",
+                        dest='anno_class_label_id_csv',
+                        default=None,
+                        help="XML class_label_id_csv")
+
     parser.add_argument("-l", "--openslide-level",
                         dest='openslide_level',
                         default=0,
@@ -113,11 +120,6 @@ def main():
     logger.setLevel(args.logLevel)
 
     # If TFRecords, must have a feature map
-    if not args.wsi_fn:
-        assert args.wsi_fn is not None, "You must supply a input file"
-        assert os.path.exists(args.wsi_fn), "Your wsi file ({}) was not found".format(args.wsi_fn)
-
-    # If TFRecords, must have a feature map
     if args.save_format == '.tfrecord':
         assert args.feature_map is not None, "You must supply a feature map if you want TFRecords exported"
         assert os.path.exists(args.feature_map), "Your feature map file ({}) was not found".format(args.feature_map)
@@ -127,18 +129,25 @@ def main():
         assert args.training_file is not None, "You must provide a GNB file if using GNB-based tissue detection"
         assert os.path.exists(args.training_file), "Your GNB file ({}) was not found".format(args.training_file)
 
-    # If annotation is provided, change the default output for outputting annotation
+    # If annotation is provided, change the default output for outputting annotation  If Annotation xml file is provided, must have a XML class_label_id_csv file
     with_anno = False
+    annotations = None
     if args.anno_xml:
         with_anno = True
         assert os.path.exists(args.anno_xml),  "Your XML file ({}) was not found".format(args.anno_xml)
+        assert args.anno_class_label_id_csv is not None, "You must supply a input file"
+        assert os.path.exists(args.anno_class_label_id_csv), "Your wsi file ({}) was not found".format(args.anno_class_label_id_csv)
+
+        annotations = AnnotationRegions(args.anno_xml, args.anno_class_label_id_csv)
+
 
     if args.feature_map is not None:
         fm = FeatureMapCreator(args.feature_map)
     else:
         fm = None
 
-    if args.method_task == "Patch_extraction":
+    '''PAtch extraction with out annotation and with out registration'''
+    if args.method_task == "Patch_extraction" or args.method_task == "Patch_extraction_with_ann":
         parameters = ExtractorParameters(args.out_dir,               # Where the patches should be extracted to
                                          save_format=args.save_format,  # Can be '.jpg', '.png', or '.tfrecord'
                                          sample_cnt=args.sample_cnt,    # Limit the number of patches to extract
@@ -164,8 +173,9 @@ def main():
         patch_extractor = PatchExtractor(tissue_detector,
                                          parameters,
                                          feature_map=fm,  # Need to update this when available
-                                         annotations=None   # Need to update this when available
+                                         annotations=annotations   # Need to update this when available
                                          )
+        '''If num_processors is zero then multi processing is turned off'''
         if args.num_processors > 0:
             # Run the extraction process
             multiprocessing.set_start_method('spawn')
