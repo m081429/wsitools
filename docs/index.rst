@@ -6,6 +6,8 @@
 WSITools documentation!
 ==============================================
 
+Tools to aid Digital pathology deep learning projects   
+
 Contents:
 
 .. toctree::

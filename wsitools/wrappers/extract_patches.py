@@ -176,7 +176,7 @@ def main():
             offset = matcher.match(args.wsi_fn, args.wsi_reg_2)
 
     '''Calling appropriate methods if registration offsets are provided, so this block is called in patch_extraction with image regitration and in patch_extraction with image regitration & annotations'''
-    if args.wsi_reg_2 and args.reg_off_set_x and args.reg_off_set_y:
+    if args.wsi_reg_2 :
 
         parameters = PairwiseExtractorParameters(args.out_dir,  # Where the patches should be extracted to
                                          save_format=args.save_format,  # Can be '.jpg', '.png', or '.tfrecord'

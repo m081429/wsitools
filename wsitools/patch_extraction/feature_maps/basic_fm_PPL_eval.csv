@@ -13,10 +13,3 @@ img_mode_b,bytes,"RGB".encode("utf8")
 img_w_b,int,self.patch_size
 img_h_b,int,self.patch_size
 image_b,bytes,fixed_patch.tobytes()
-
-
-
-
-
-
-
