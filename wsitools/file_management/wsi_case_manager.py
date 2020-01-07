@@ -12,7 +12,7 @@ class WSI_CaseManager:
     def __init__(self, case_inventory_file=None):
         if not bool(case_inventory_file):  # if it's empty, load the default one
             logging.debug("loading the default image pair table")
-            case_inventory_file = "../file_management/example/case_pairs.csv"
+            case_inventory_file = "/projects/shart/digital_pathology/scripts/wsitools/wsitools/file_management/example/case_pairs.csv"
         if type(case_inventory_file) is list:  # if it's already the matched pairs
             self.counterpart_uuid_table = case_inventory_file  # list ([fixed_fn, float_fn])
         else:
