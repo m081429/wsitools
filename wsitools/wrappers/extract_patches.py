@@ -10,6 +10,7 @@ from wsitools.patch_extraction.patch_extractor import ExtractorParameters, Patch
 from wsitools.patch_extraction.feature_map_creator import FeatureMapCreator
 from wsitools.wsi_annotation.region_annotation import AnnotationRegions
 from wsitools.patch_extraction.pairwise_patch_extractor import PairwiseExtractorParameters, PairwisePatchExtractor
+from wsitools.wsi_registration.auto_wsi_matcher import MatcherParameters, WSI_Matcher
 
 import multiprocessing
 
@@ -153,11 +154,8 @@ def main():
         fm = None
 
     '''Checking input param for image registration'''
-    if args.wsi_reg_2 or args.reg_off_set_x  or args.reg_off_set_y:
+    if args.wsi_reg_2 :
         assert os.path.exists(args.wsi_reg_2)
-        assert str(args.reg_off_set_x).lstrip('-').replace('.','',1).isdigit()
-        assert str(args.reg_off_set_y).lstrip('-').replace('.','',1).isdigit()
-
 
     '''Choose a method for detecting tissue in thumbnail image'''
     tissue_detector = TissueDetector(args.tissue_detector_method,               # Can be LAB_Threshold or GNB
@@ -165,6 +163,18 @@ def main():
                                                                                 # this number means there is tissue
                                      training_files=args.training_file          # Training file for GNB-based detection
                                      )
+    '''Is offset values are provided then check values are float'''
+    if args.reg_off_set_x or args.reg_off_set_y:
+        assert str(args.reg_off_set_x).lstrip('-').replace('.','',1).isdigit()
+        assert str(args.reg_off_set_y).lstrip('-').replace('.','',1).isdigit()
+        offset = (float(args.reg_off_set_x), float(args.reg_off_set_x))
+    else:
+        '''Is offset values are not provided then offset values are calculated based on image registration'''
+        if args.wsi_reg_2:
+            matcher_parameters = MatcherParameters()
+            matcher = WSI_Matcher(tissue_detector, matcher_parameters)
+            offset = matcher.match(args.wsi_fn, args.wsi_reg_2)
+
     '''Calling appropriate methods if registration offsets are provided, so this block is called in patch_extraction with image regitration and in patch_extraction with image regitration & annotations'''
     if args.wsi_reg_2 and args.reg_off_set_x and args.reg_off_set_y:
 
@@ -183,7 +193,7 @@ def main():
                                          extract_layer=args.openslide_level  # OpenSlide Level
                                          )
         patch_extractor = PairwisePatchExtractor(tissue_detector, parameters, feature_map=fm, annotations=annotations)
-        offset=(float(args.reg_off_set_x),float(args.reg_off_set_x))
+
 
         '''If num_processors is zero then multi processing is turned off'''
         if args.num_processors > 0:

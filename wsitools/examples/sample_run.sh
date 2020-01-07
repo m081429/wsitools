@@ -16,5 +16,9 @@ off_set_x=-1620.95
 off_set_y=1675.6
 fm=/projects/shart/digital_pathology/scripts/wsitools/wsitools/patch_extraction/feature_maps/basic_fm_PPL_eval.csv
 #python /projects/shart/digital_pathology/scripts/wsitools/wsitools/wrappers/extract_patches.py -w $input -o $output -s 224  -n 0 -F $fm -f .tfrecord -W $float_input -Ox $off_set_x -Oy $off_set_y
+#####PATCH EXTRACTION with IMAGE REGISTRATION and with out offsetvalues#######
+#python /projects/shart/digital_pathology/scripts/wsitools/wsitools/wrappers/extract_patches.py -w $input -o $output -s 224  -n 0 -F $fm -f .tfrecord -W $float_input
 #####PATCH EXTRACTION with IMAGE REGISTRATION & ANNOTATION#######
-python /projects/shart/digital_pathology/scripts/wsitools/wsitools/wrappers/extract_patches.py -w $input -o $output -s 224 -n 0 -F $fm -f .tfrecord -W $float_input -Ox $off_set_x -Oy $off_set_y -x $xml_fn -y $class_label_id_csv
+#python /projects/shart/digital_pathology/scripts/wsitools/wsitools/wrappers/extract_patches.py -w $input -o $output -s 224 -n 0 -F $fm -f .tfrecord -W $float_input -Ox $off_set_x -Oy $off_set_y -x $xml_fn -y $class_label_id_csv
+#####PATCH EXTRACTION with IMAGE REGISTRATION & ANNOTATION with out offset#######
+python /projects/shart/digital_pathology/scripts/wsitools/wsitools/wrappers/extract_patches.py -w $input -o $output -s 224 -n 0 -F $fm -f .tfrecord -W $float_input -x $xml_fn -y $class_label_id_csv
