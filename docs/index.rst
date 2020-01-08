@@ -25,7 +25,7 @@ Currently, it supports four patch extraction scenarios:
 
 ## Additional Features
 1. Detect tissue in a WSI
-2. Export and parsing annotation from [QuPath_] and [Aperio Image Scope_] 
+2. Export and parsing annotation from [QuPath_] and [`Aperio Image Scope`_] 
 3. WSI registration for image pairs [Paper_]
 4. Reconstruct WSI from the processed image patches
 
