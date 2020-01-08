@@ -25,10 +25,13 @@ Currently, it supports four patch extraction scenarios:
 
 ## Additional Features
 1. Detect tissue in a WSI
-2. Export and parsing annotation from [QuPath](https://qupath.github.io/) and [Aperio Image Scope](https://www.leicabiosystems.com/digital-pathology/manage/aperio-imagescope/) 
-3. WSI registration for image pairs [[Paper]](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0220074)
+2. Export and parsing annotation from [QuPath_] and [Aperio Image Scope_] 
+3. WSI registration for image pairs [Paper_]
 4. Reconstruct WSI from the processed image patches
 
+.. _QuPath: https://qupath.github.io
+.. _Aperio Image Scope: https://www.leicabiosystems.com/digital-pathology/manage/aperio-imagescope
+.. _Paper: https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0220074
 
 Contents:
 
